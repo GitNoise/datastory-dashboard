@@ -19,7 +19,7 @@ interface ChartContextType {
   height: number;
   x: keyof any;
   y: keyof any;
-  padding?: number;
+  padding?: number; // TODO: this padding should be for top, right, bottom and left
   xScale: AxisScale<number>;
   yScale: AxisScale<number>;
   xGet: (d: any) => any;
@@ -59,14 +59,14 @@ export default function Chart({
     <div className="h-full" ref={parentRef}>
       <ChartContext.Provider
         value={{
-          data: data,
-          width: width,
+          data,
+          width,
           height: height ?? pHeight,
           x: x,
           y: y,
-          padding: padding,
-          xScale: xScale,
-          yScale: yScale,
+          padding,
+          xScale,
+          yScale,
           xGet: (d) => xScale(d[x]),
           yGet: (d) => yScale(d[y]),
         }}
