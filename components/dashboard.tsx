@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Card, CardBody, Badge } from "@chakra-ui/react";
+import { format } from "d3-format";
+import { Card, CardBody, Tag, Box, Flex, Text } from "@chakra-ui/react";
+
 import DropDown from "./dropDown";
 import { Country, CountryData, getCountry } from "../actions/countryActions";
 import Table from "./table";
@@ -36,50 +38,74 @@ export default function Dashboard({
 
   return (
     <>
-      <div className="my-2">
+      <Box my={4}>
         <DropDown
           onChange={handleCountriesChange}
           data={countries.map((c) => ({ id: c.id, name: c.name }))}
+          aria-label="country dropdown"
         />
-      </div>
+      </Box>
 
       {countryData ? (
-        <>
-          <Card backgroundColor={"#fff"}>
-            <CardBody>
-              <Badge>{countryData.cohort}</Badge>
-              <Badge> {countryData.measure}</Badge>
+        <section aria-label="country line chart and data table">
+          <Box my={4}>
+            <Card backgroundColor={"#fff"}>
+              <CardBody>
+                <Flex gap={2}>
+                  <Text fontSize="md">Parameters:</Text>
+                  <Tag>{countryData.cohort}</Tag>
+                  <Tag>{countryData.measure}</Tag>
+                </Flex>
 
-              <Chart
-                data={countryData.data}
-                x={"year"}
-                y={"value"}
-                height={300}
-                padding={22}
-              >
-                <Svg>
-                  <g transform={`translate(${0},${-22})`}>
-                    <Axis orientation="bottom" xOrY="x" />
-                  </g>
+                <Chart
+                  data={countryData.data}
+                  x={"year"}
+                  y={"value"}
+                  height={300}
+                  padding={44}
+                  aria-label="country line chart"
+                >
+                  <Svg>
+                    <Axis
+                      left={0}
+                      top={112}
+                      orientation="bottom"
+                      xOrY="x"
+                      label="Year"
+                      labelOffset={8}
+                      tickFormat={(year) => format("d")(year)}
+                    />
 
-                  <g transform={`translate(${0},${22})`}>
-                    <Axis orientation="left" xOrY="y" />
-                  </g>
-                  <Line />
-                  <Area />
-                </Svg>
-              </Chart>
-              <br />
-              <Table data={countryData.data} />
-            </CardBody>
-          </Card>
-        </>
+                    <Axis
+                      left={0}
+                      top={24}
+                      orientation="left"
+                      xOrY="y"
+                      label="Age"
+                      labelOffset={28}
+                    />
+                    <Line />
+                    <Area />
+                  </Svg>
+                </Chart>
+                <Table
+                  data={countryData.data}
+                  aria-label="country data table"
+                />
+              </CardBody>
+            </Card>
+          </Box>
+        </section>
       ) : (
-        <Card backgroundColor={"#fff"}>
-          <CardBody>
-            <h1>No data</h1>
-          </CardBody>
-        </Card>
+        <section aria-label="no data">
+          <Box my={4}>
+            <Card backgroundColor={"#fff"}>
+              <CardBody>
+                <h1>No data</h1>
+              </CardBody>
+            </Card>
+          </Box>
+        </section>
       )}
     </>
   );

@@ -9,11 +9,11 @@ export default async function Home() {
 
   return (
     <Box minH="100vh" w="100%" p={6}>
-      <Heading as="h1" size="4xl" noOfLines={1} color={"#222"}>
-        Dashboard
+      <Heading as="h1" size="2xl" noOfLines={1} color={"#222"}>
+        Country dashboard
       </Heading>
 
-      <Dashboard countries={countries} />
+      <main>{countries?.length && <Dashboard countries={countries} />}</main>
     </Box>
   );
 }
