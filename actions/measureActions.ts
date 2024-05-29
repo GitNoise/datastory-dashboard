@@ -9,8 +9,8 @@ export interface Measure {
 
 /*** ACTIONS ***/
 
+// Prepared to get data from external source
 export async function getMeasures(): Promise<Measure[] | null> {
-  // Prepared to get data from external source
   return [
     { id: "life_expectancy", name: "Life expectancy", unit: "years" },
     { id: "population", name: "Population", unit: "thousands" },

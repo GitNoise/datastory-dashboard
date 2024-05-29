@@ -13,7 +13,7 @@ export default async function Home() {
     <Flex justify="center" minH="100vh" w="100%" p={6}>
       <Container maxW="900px">
         <Heading as="h1" size="2xl" noOfLines={1} color={"#222"}>
-          Country dashboard
+          Datastory Country Dashboard
         </Heading>
 
         <main>

@@ -17,15 +17,13 @@ import Svg from "./svg";
 import Line from "./line";
 import Axis from "./axis";
 import Area from "./area";
-import { preconnect } from "react-dom";
 
-export default function Dashboard({
-  countries,
-  measures,
-}: {
+interface DashboardProps {
   countries: Array<Country>;
   measures: Array<Measure>;
-}) {
+}
+
+export default function Dashboard({ countries, measures }: DashboardProps) {
   const [countryId, setCountryId] = useState<string>();
   const [measureId, setMeasureId] = useState<string>();
   const [countryData, setCountryData] = useState<CountryData | null>(null);
@@ -57,6 +55,7 @@ export default function Dashboard({
 
   return (
     <>
+      {/* TODO: make responsive so it break across two rows on narrow screens */}
       <Flex my={4} gap={8}>
         <DropDown
           placeholderText="- Select country -"
@@ -78,11 +77,14 @@ export default function Dashboard({
             <Card backgroundColor={"#fff"}>
               <CardBody>
                 {country && measure && (
-                  <Flex gap={2}>
-                    <Text fontSize="md">Parameters:</Text>
-                    <Tag>{country.name}</Tag>
-                    <Tag>{measure.name}</Tag>
-                  </Flex>
+                  <>
+                    {/* TODO: make responsive so it break across two rows on narrow screens */}
+                    <Flex gap={2}>
+                      <Text fontSize="md">Parameters:</Text>
+                      <Tag>{country.name}</Tag>
+                      <Tag>{measure.name}</Tag>
+                    </Flex>
+                  </>
                 )}
 
                 <Chart
