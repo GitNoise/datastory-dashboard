@@ -5,70 +5,100 @@ import { format } from "d3-format";
 import { Card, CardBody, Tag, Box, Flex, Text } from "@chakra-ui/react";
 
 import DropDown from "./dropDown";
-import { Country, CountryData, getCountry } from "../actions/countryActions";
+import {
+  Country,
+  CountryData,
+  getCountry as getCountryData,
+} from "../actions/countryActions";
+import { Measure } from "../actions/measureActions";
 import Table from "./table";
 import Chart from "./chart";
 import Svg from "./svg";
 import Line from "./line";
 import Axis from "./axis";
 import Area from "./area";
+import { preconnect } from "react-dom";
 
 export default function Dashboard({
   countries,
+  measures,
 }: {
   countries: Array<Country>;
+  measures: Array<Measure>;
 }) {
-  const [id, setId] = useState<string>();
+  const [countryId, setCountryId] = useState<string>();
+  const [measureId, setMeasureId] = useState<string>();
   const [countryData, setCountryData] = useState<CountryData | null>(null);
 
   const handleCountriesChange = (id: string) => {
-    setId(id);
+    setCountryId(id);
+  };
+
+  const handleMeasureChange = (id: string) => {
+    setMeasureId(id);
   };
 
   useEffect(() => {
-    async function getData(id: string) {
-      const data = await getCountry(id);
+    async function getData(countryId: string, measureId: string) {
+      const data = await getCountryData(countryId, measureId);
       setCountryData(data);
     }
 
-    if (id) {
-      getData(id);
+    if (countryId && measureId) {
+      getData(countryId, measureId);
     }
-  }, [id]);
+  }, [countryId, measureId]);
+
+  const measure = measures.find((d) => d.id === measureId);
+  let measureLabel = measure?.name;
+  measureLabel += measure?.unit ? ` (${measure?.unit})` : "";
+
+  const country = countries.find((d) => d.id === countryId);
 
   return (
     <>
-      <Box my={4}>
+      <Flex my={4} gap={8}>
         <DropDown
+          placeholderText="- Select country -"
           onChange={handleCountriesChange}
           data={countries.map((c) => ({ id: c.id, name: c.name }))}
           aria-label="country dropdown"
         />
-      </Box>
+        <DropDown
+          placeholderText="- Select measure -"
+          onChange={handleMeasureChange}
+          data={measures}
+          aria-label="measure dropdown"
+        />
+      </Flex>
 
       {countryData ? (
         <section aria-label="country line chart and data table">
           <Box my={4}>
             <Card backgroundColor={"#fff"}>
               <CardBody>
-                <Flex gap={2}>
-                  <Text fontSize="md">Parameters:</Text>
-                  <Tag>{countryData.cohort}</Tag>
-                  <Tag>{countryData.measure}</Tag>
-                </Flex>
+                {country && measure && (
+                  <Flex gap={2}>
+                    <Text fontSize="md">Parameters:</Text>
+                    <Tag>{country.name}</Tag>
+                    <Tag>{measure.name}</Tag>
+                  </Flex>
+                )}
 
                 <Chart
-                  data={countryData.data}
+                  data={countryData.data.sort((a, b) =>
+                    a.year < b.year ? -1 : 1
+                  )}
                   x={"year"}
                   y={"value"}
                   height={300}
-                  padding={44}
+                  padding={50}
                   aria-label="country line chart"
                 >
                   <Svg>
                     <Axis
                       left={0}
-                      top={112}
+                      top={50 * 2}
                       orientation="bottom"
                       xOrY="x"
                       label="Year"
@@ -78,11 +108,11 @@ export default function Dashboard({
 
                     <Axis
                       left={0}
-                      top={24}
+                      top={0}
                       orientation="left"
                       xOrY="y"
-                      label="Age"
-                      labelOffset={28}
+                      label={measure ? measureLabel : undefined}
+                      labelOffset={35}
                     />
                     <Line />
                     <Area />
@@ -90,6 +120,7 @@ export default function Dashboard({
                 </Chart>
                 <Table
                   data={countryData.data}
+                  valueLabel={measure ? measureLabel : undefined}
                   aria-label="country data table"
                 />
               </CardBody>

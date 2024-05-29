@@ -70,8 +70,8 @@ export async function getCountries(): Promise<Country[] | null> {
 }
 
 export async function getCountry(
-  id: string,
-  measure: string = "life_expectancy"
+  countryId: string,
+  measureId: string
 ): Promise<CountryData | null> {
   try {
     const query = gql`
@@ -85,7 +85,7 @@ export async function getCountry(
       }
     `;
 
-    const variables = { countryId: id, measure };
+    const variables = { countryId: countryId, measure: measureId };
 
     const response = await graphQLClient.request<CountryDataResponse>(
       query,
@@ -93,8 +93,8 @@ export async function getCountry(
     );
 
     return {
-      cohort: id,
-      measure: "life_expectancy",
+      cohort: countryId,
+      measure: measureId,
       data: response.cube_cube_M6Lh5is0FtqUhZ ?? [],
     };
   } catch (error) {

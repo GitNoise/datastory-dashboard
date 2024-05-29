@@ -50,8 +50,11 @@ export default function Chart({
     range: [0, width - (padding ?? 0) * 2],
   });
 
+  const yExtent = extent(data, (d) => d[y]);
+
   const yScale = scaleLinear<number>({
-    domain: [0, max(data, (d) => d[y]) as number],
+    // always extend to 0
+    domain: [yExtent[0] < 0 ? yExtent[0] : 0, yExtent[1] < 0 ? 0 : yExtent[1]],
     range: [(height ?? pHeight) - (padding ?? 0) * 2, 0],
   });
 

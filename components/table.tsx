@@ -10,16 +10,16 @@ import {
   Tr,
   Th,
   Td,
-  TableCaption,
   TableContainer,
 } from "@chakra-ui/react";
 import { DataPoint } from "./actions";
 
 interface TableProps {
   data: DataPoint[];
+  valueLabel?: string;
 }
 
-export default function Table({ data }: TableProps) {
+export default function Table({ data, valueLabel = "Value" }: TableProps) {
   if (!data.length) {
     return;
   }
@@ -28,27 +28,20 @@ export default function Table({ data }: TableProps) {
     <>
       <TableContainer>
         <ChakraTable variant="simple" size="sm">
-          <TableCaption>Country data</TableCaption>
           <Thead>
             <Tr>
               <Th>Year</Th>
-              <Th>Value</Th>
+              <Th isNumeric>{valueLabel}</Th>
             </Tr>
           </Thead>
           <Tbody>
             {data.map((d, i) => (
               <Tr key={i}>
                 <Td>{d.year}</Td>
-                <Td>{d.value}</Td>
+                <Td isNumeric>{d.value}</Td>
               </Tr>
             ))}
           </Tbody>
-          <Tfoot>
-            <Tr>
-              <Th>Year</Th>
-              <Th>Value</Th>
-            </Tr>
-          </Tfoot>
         </ChakraTable>
       </TableContainer>
     </>
