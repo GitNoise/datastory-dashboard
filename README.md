@@ -22,6 +22,8 @@ A mix of Chakra UI and Tailwind are used to give highflexibility coupled with fa
 
 For the visualisations Visx was used. The same prinicple applies here, the library is quite low level since it allows for better control. An data visualisation architecture inspired by the Svelte visualisation library LayerCake was implemented to speed up development.
 
+The application has not been adjusted to work on mobile. That said it works pretty decently on narrow screens. Comments have been added in Dashboard.tsx for where responsiveness should be implemented.
+
 ### Data fetching
 
 Fetching data uses React Server Actions which removes the need for alternative BFF/proxy pattern that is/has been common in NextJS apps.
